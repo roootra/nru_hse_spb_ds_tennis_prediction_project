@@ -1,0 +1,49 @@
+blockquote {
+margin: 0;
+background: white;
+border: 15px solid #000000; /*рамки*/
+border-radius: 8px;
+text-align: center;
+color: #58554B;
+padding: 30px 50px;
+font-family: 'Lato', sans-serif;
+}
+blockquote p {
+margin-top: 0;
+font-size: 22px;
+line-height: 1.25;
+}
+blockquote span {
+background: #FFFFFF; /*фон текста цитаты*/
+box-shadow: -20px 0 #FFFFFF, 20px 0 #FFFFFF; /*кубики до и после текста цитаты*/
+position: relative;
+}
+blockquote span:before {
+content: "\201C";
+font-family: serif;
+position: absolute;
+font-size: 60px;
+left: -50px;
+top: 10px;
+line-height: 0;
+}
+blockquote span:after {
+content: "\201D";
+font-family: serif;
+position: absolute;
+font-size: 60px;
+right: -50px;
+bottom: -10px;
+line-height: 0;
+}
+blockquote cite {
+font-style: normal;
+text-transform: uppercase;
+font-size: 14px;
+}
+
+.center-block() {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

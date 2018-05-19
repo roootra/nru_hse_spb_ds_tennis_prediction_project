@@ -1,0 +1,68 @@
+```{r}
+library(caret)
+library(pROC)
+library(dplyr)
+wta_data = read.csv("/students/ansarzhanov/private/final_project/shared_data/wta_data.csv")
+wta_data$win = as.factor(wta_data$win)
+```
+Логит-модель с кросс-валидацией
+```{r}
+set.seed(42)
+test.ind = createDataPartition(wta_data$win, p = 0.7, list = FALSE)
+wta.train = wta_data[test.ind,]
+wta.test = wta_data[-test.ind,]
+
+logit.cv <- train(win~.,  data=wta.train, method="glm", family=binomial(link = 'logit'),
+                 trControl = trainControl(method = "cv", number = 10))
+
+pred.cv = predict(logit.cv, newdata = wta.test)
+confusionMatrix(data=pred.cv, wta.test$win)
+
+#тут он почему-то не хочет делать type = "response", так что на вероятности можно посмотреть как-то так. еще confusionMatrix строится только если предсказываешь не вероятности, а конкретные значения 1/0, что вполне логично, это же классификация.
+
+pred1 = predict(logit.cv, newdata = wta.test, type = "prob")
+pred1$`1` = as.numeric(pred1$`1`)
+summary(logit.cv)
+```
+А еще может я накосячила с кросс-валидацией, потому что у меня нет разницы в моделях с кросс-валидацией и без нее, посмотрите, пожалуйста.
+```{r}
+ROC.cv = roc(response = wta.test$win, predictor = pred1$`1`)
+auc(ROC.cv)
+```
+
+Логит-модель без кросс-валидации
+```{r}
+logit <- glm(win~.,  data=wta.train, family=binomial(link = 'logit'))
+pred = predict(logit, newdata = wta.test, type = "response")
+summary(logit)
+```
+АУК для нее:
+```{r}
+ROC = roc(response = wta.test$win, predictor = pred)
+auc(ROC)
+```
+Ranom forest:
+```{r warning=FALSE, message=FALSE}
+library(randomForest)
+rf_model <- randomForest(win ~ ., data=wta.train,  trControl = trainControl(method = "repeatedcv", number = 10))
+
+pred.rf<-predict(rf_model, wta.test, probability=FALSE)
+confusionMatrix(pred.rf, wta.test$win)
+```
+
+Если с отбором признаков(он отобрал только 1, так что думаю, то это лажа):
+```{r message = F, warning=FALSE}
+control <- rfeControl(functions=rfFuncs, method="cv", number=10)
+rf.results <- rfe(dplyr::select(wta.train, -win),
+               wta.train$win, 
+               sizes=c(1:9), 
+               rfeControl=control)
+
+predictors(rf.results)
+
+rf.PredFS.test<-predict(rf.results$fit, wta.test, probability=FALSE)
+confusionMatrix(rf.PredFS.test, wta.test$win)
+```
+
+
+

@@ -1,0 +1,6 @@
+quotes <- readLines("www/quotes.txt")
+quotes_df <- as.data.frame(matrix(quotes, ncol=2, byrow=TRUE))
+colnames(quotes_df) <- c("Quote", "Author")
+quotes_df$Author <- gsub("―", "", quotes_df$Author)
+number <- runif(1, 1, 80)
+number <- round(number, digits = 0)
