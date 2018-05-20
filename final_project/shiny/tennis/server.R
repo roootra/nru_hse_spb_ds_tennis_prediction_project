@@ -16,7 +16,7 @@ library(stats)
 #data with player info and stats
 load("www/parsed_data.RData")
 #predicting model
-avg_model <- catboost.load_model("www/avg_model.catmodel")
+avg_model <- catboost.load_model("www/atp_avg_model.catmodel")
 
 ###Server routine
 shinyServer(function(input, output, session) {
@@ -44,11 +44,11 @@ shinyServer(function(input, output, session) {
   
   #gets input data
   input_data <- reactive({
-    input_data <- data.frame(Surface = input$Surface, Court = input$Court, ranking_diff = (input$`1PlayerRanking` - input$`2PlayerRanking`),
-           points_diff = (input$`1PlayerPoints` - input$`2PlayerPoints`), AvgW = input$`1PlayerOdds`, AvgL = input$`2PlayerOdds`, 
+    input_data <- data.frame(ranking_diff = (input$`1PlayerRanking` - input$`2PlayerRanking`),
+           points_diff = (input$`1PlayerPoints` - input$`2PlayerPoints`), 
+           AvgW = input$`1PlayerOdds`, 
+           AvgL = input$`2PlayerOdds`,
            stringsAsFactors = TRUE)
-    levels(input_data$Surface) <- c("Clay",  "Grass", "Hard")
-    levels(input_data$Court) <- c("Indoor",  "Outdoor")
     return(input_data)
   })
   
@@ -56,7 +56,7 @@ shinyServer(function(input, output, session) {
   output$prob <- renderText({
     input$SubmitButton #controller
     inp <- isolate(input_data())
-    catboost_pred_data <- as.data.frame(model.matrix(formula(~ Surface + Court + ranking_diff + points_diff + AvgW + AvgL), data = inp))[, -1]
+    catboost_pred_data <- as.data.frame(model.matrix(formula(~ ranking_diff + points_diff + AvgW + AvgL), data = inp))[, -1]
     catboost_pred_pool <- catboost.load_pool(data = catboost_pred_data)
     prediction <- catboost.predict(avg_model, catboost_pred_pool, prediction_type = "Probability")
     paste0("The first player is predicted to win with a probability of ", (100*round(prediction, digits = 5)), "%.")

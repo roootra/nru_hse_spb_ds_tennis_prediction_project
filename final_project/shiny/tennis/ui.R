@@ -49,10 +49,6 @@ shinyUI(fixedPage(theme = "style.css",
     column(numericInput(inputId="1PlayerOdds", label = "Player #1 ATP/WTA Average Odds", value = 1.00, min = 0.01, max = 100.00, step = 0.01), width = 6, align = 'right'),
     column(numericInput(inputId="2PlayerOdds", label = "Player #2 ATP/WTA Average Odds", value = 1.00, min = 0.01, max = 100.00, step = 0.01), width = 6, align = 'left')
   ),
-  fixedRow(
-    column(selectInput(inputId="Surface", label = "Surface type", choices = c("Carpet", "Clay", "Grass", "Hard")), width = 6, align = 'right'),
-    column(selectInput(inputId="Court", label = "Choose whether a field is indoor/outdoor", choices = c("Indoor", "Outdoor")), width = 6, align = 'left')
-  ),
   
   fixedRow(
     column(actionButton(inputId = "SubmitButton", "Make a prediction!"), width = 12, align = 'center')
