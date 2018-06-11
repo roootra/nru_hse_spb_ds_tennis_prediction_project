@@ -74,7 +74,8 @@ shinyServer(function(input, output, session) {
   #makes a prediction
   output$prob <- renderText({
     input$SubmitButton #controller
-    
+    if(input$PlayersGender == "---"){print("Choose gender first")}
+    else{
     isolate(if(input$Method == 1){
       match_chosen <- data.frame(text = input$ChosenPinnacleMatch)
       match_chosen <- separate(match_chosen, text, c("num", "rest"), " ", extra = "drop")
@@ -92,7 +93,9 @@ shinyServer(function(input, output, session) {
     catboost_pred_data <- as.data.frame(model.matrix(formula(~ ranking_diff + points_diff + AvgW + AvgL), data = inp))[, -1]
     catboost_pred_pool <- catboost.load_pool(data = catboost_pred_data)
     prediction <- catboost.predict(avg_model, catboost_pred_pool, prediction_type = "Probability")
-    paste0("The first player is predicted to win with a probability of ", (100*round(prediction, digits = 5)), "%.")}
+    paste0("The first player is predicted to win with a probability of ", (100*round(prediction, digits = 5)), "%.")
+    }
+  }
   )
   
 })

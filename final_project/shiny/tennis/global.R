@@ -1,5 +1,10 @@
 #shared data
 player_list <- NULL
+players_chosen <- data.frame(
+  ranking_diff = NULL,
+  points_diff = NULL,
+  AvgW = NULL,
+  AvgL = NULL)
 
 #getPinnacleOdds
 {
