@@ -5,7 +5,7 @@ players_chosen <- data.frame(
   points_diff = NULL,
   AvgW = NULL,
   AvgL = NULL)
-
+load("www/parsed_data.RData")
 #getPinnacleOdds
 {
   library(pinnacle.API)

@@ -15,7 +15,7 @@ library(stats)
 
 ###Data loading
 #data with player info and stats
-load("www/parsed_data.RData")
+
 #predicting model
 avg_model <- catboost.load_model("www/atp_avg_model.catmodel")
 #getting data from Pinnacle
