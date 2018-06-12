@@ -74,7 +74,7 @@ shinyServer(function(input, output, session) {
   #makes a prediction
   output$prob <- renderText({
     input$SubmitButton #controller
-    if(input$PlayersGender == "---"){print("Choose gender first")}
+    if(isolate(input$PlayersGender == "---")){print("Choose gender first")}
     else{
     isolate(if(input$Method == 1){
       match_chosen <- data.frame(text = input$ChosenPinnacleMatch)
