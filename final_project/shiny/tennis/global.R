@@ -11,7 +11,7 @@ load("www/parsed_data.RData")
   library(pinnacle.API)
   library(dplyr)
   AcceptTermsAndConditions(accepted = TRUE) # :)
-  SetCredentials("AS1047100", "9!J71lju1oo")
+  SetCredentials("Put your login here", "Put your password here")
   
   #получаем данные по теннису
   sports_data <- GetSports(force = FALSE)
